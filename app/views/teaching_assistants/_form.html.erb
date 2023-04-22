@@ -1,47 +1,9 @@
-<%= form_with(model: teaching_assistant) do |form| %>
-  <% if teaching_assistant.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(teaching_assistant.errors.count, "error") %> prohibited this teaching_assistant from being saved:</h2>
-
-      <ul>
-        <% teaching_assistant.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div>
-    <%= form.label :year, style: "display: block" %>
-    <%= form.number_field :year %>
-  </div>
-
-  <div>
-    <%= form.label :number, style: "display: block" %>
-    <%= form.text_field :number %>
-  </div>
-
-  <div>
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
-  </div>
-
-  <div>
-    <%= form.label :grade, style: "display: block" %>
-    <%= form.text_field :grade %>
-  </div>
-
-  <div>
-    <%= form.label :labo, style: "display: block" %>
-    <%= form.text_field :labo %>
-  </div>
-
-  <div>
-    <%= form.label :description, style: "display: block" %>
-    <%= form.text_field :description %>
-  </div>
-
-  <div>
-    <%= form.submit %>
-  </div>
+<%= bootstrap_form_with(model: teaching_assistant) do |form| %>
+  <%= form.number_field :year %>
+  <%= form.text_field :number %>
+  <%= form.text_field :name %>
+  <%= form.text_field :grade %>
+  <%= form.text_field :labo %>
+  <%= form.text_field :description %>
+  <%= form.submit %>
 <% end %>
