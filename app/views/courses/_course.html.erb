@@ -1,37 +1,16 @@
-<div id="<%= dom_id course %>">
-  <p>
-    <strong>Year:</strong>
-    <%= course.year %>
-  </p>
-
-  <p>
-    <strong>Term:</strong>
-    <%= course.term %>
-  </p>
-
-  <p>
-    <strong>Number:</strong>
-    <%= course.number %>
-  </p>
-
-  <p>
-    <strong>Name:</strong>
-    <%= course.name %>
-  </p>
-
-  <p>
-    <strong>Instructor:</strong>
-    <%= course.instructor %>
-  </p>
-
-  <p>
-    <strong>Time budget:</strong>
-    <%= course.time_budget %>
-  </p>
-
-  <p>
-    <strong>Description:</strong>
-    <%= course.description %>
-  </p>
-
+<div class="row py-2 border-top">
+  <div class="col-1 my-auto"><%= course.year %></div>
+  <div class="col-1 my-auto"><%= course.term %></div>
+  <div class="col-1 my-auto"><%= course.number %></div>
+  <div class="col-3 my-auto"><%= course.name %></div>
+  <div class="col-1 my-auto"><%= course.instructor %></div>
+  <div class="col-1 my-auto"><%= course.time_budget %></div>
+  <div class="col-2 my-auto"><%= course.description %></div>
+  <div class="col-2">
+    <div class="d-flex justify-content-end">
+      <%= link_to "編集", edit_course_path(course), class: "btn btn-sm btn-outline-primary me-2" %>
+      <%= link_to "表示", course, class: "btn btn-sm btn-outline-primary me-2" %>
+      <%= button_to "削除", course, method: :delete, class: "btn btn-sm btn-outline-danger" %>
+    </div>
+  </div>
 </div>

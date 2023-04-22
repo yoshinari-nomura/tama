@@ -1,14 +1,18 @@
-<p style="color: green"><%= notice %></p>
-
 <h1>Assignments</h1>
 
-<div id="assignments">
-  <% @assignments.each do |assignment| %>
-    <%= render assignment %>
-    <p>
-      <%= link_to "Show this assignment", assignment %>
-    </p>
-  <% end %>
+<div class="card shadow mt-3">
+  <div class="card-header">
+    <%= icon_with_text("table", "一覧") %>
+  </div>
+  <div class="card-body mx-3">
+    <div class="row py-2">
+      <div class="col-3 my-auto">授業科目</div>
+      <div class="col-3 my-auto">TA</div>
+      <div class="col-4 my-auto">備考</div>
+      <div class="col-2 d-flex justify-content-end">
+        <%= link_to icon_with_text("plus-circle", "登録"), new_assignment_path, class: "btn btn-outline-primary" %>
+      </div>
+    </div>
+    <%= render @assignments %>
+  </div>
 </div>
-
-<%= link_to "New assignment", new_assignment_path %>

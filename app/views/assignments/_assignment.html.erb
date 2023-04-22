@@ -1,17 +1,12 @@
-<div id="<%= dom_id assignment %>">
-  <p>
-    <strong>Course:</strong>
-    <%= assignment.course_id %>
-  </p>
-
-  <p>
-    <strong>Teaching assistant:</strong>
-    <%= assignment.teaching_assistant_id %>
-  </p>
-
-  <p>
-    <strong>Description:</strong>
-    <%= assignment.description %>
-  </p>
-
+<div class="row py-2 border-top">
+  <div class="col-3 my-auto"><%= assignment.course.name %></div>
+  <div class="col-3 my-auto"><%= assignment.teaching_assistant.name %></div>
+  <div class="col-4 my-auto"><%= assignment.description %></div>
+  <div class="col-2">
+    <div class="d-flex justify-content-end">
+      <%= link_to "編集", edit_assignment_path(assignment), class: "btn btn-sm btn-outline-primary me-2" %>
+      <%= link_to "表示", assignment, class: "btn btn-sm btn-outline-primary me-2" %>
+      <%= button_to "削除", assignment, method: :delete, class: "btn btn-sm btn-outline-danger" %>
+    </div>
+  </div>
 </div>

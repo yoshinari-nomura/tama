@@ -1,32 +1,15 @@
-<div id="<%= dom_id teaching_assistant %>">
-  <p>
-    <strong>Year:</strong>
-    <%= teaching_assistant.year %>
-  </p>
-
-  <p>
-    <strong>Number:</strong>
-    <%= teaching_assistant.number %>
-  </p>
-
-  <p>
-    <strong>Name:</strong>
-    <%= teaching_assistant.name %>
-  </p>
-
-  <p>
-    <strong>Grade:</strong>
-    <%= teaching_assistant.grade %>
-  </p>
-
-  <p>
-    <strong>Labo:</strong>
-    <%= teaching_assistant.labo %>
-  </p>
-
-  <p>
-    <strong>Description:</strong>
-    <%= teaching_assistant.description %>
-  </p>
-
+<div class="row py-2 border-top">
+  <div class="col-1 my-auto"><%= teaching_assistant.year %></div>
+  <div class="col-1 my-auto"><%= teaching_assistant.number %></div>
+  <div class="col-1 my-auto"><%= teaching_assistant.name %></div>
+  <div class="col-1 my-auto"><%= teaching_assistant.grade %></div>
+  <div class="col-1 my-auto"><%= teaching_assistant.labo %></div>
+  <div class="col-5 my-auto"><%= teaching_assistant.description %></div>
+  <div class="col-2">
+    <div class="d-flex justify-content-end">
+      <%= link_to "編集", edit_teaching_assistant_path(teaching_assistant), class: "btn btn-sm btn-outline-primary me-2" %>
+      <%= link_to "表示", teaching_assistant, class: "btn btn-sm btn-outline-primary me-2" %>
+      <%= button_to "削除", teaching_assistant, method: :delete, class: "btn btn-sm btn-outline-danger" %>
+    </div>
+  </div>
 </div>
