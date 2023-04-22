@@ -80,37 +80,44 @@ function add() {
   local model="$1" relation="$2"
   local file="app/models/$model".rb
 
-  sed --in-place "/^class .* < ApplicationRecord/a \ \ $relation" "$file"
+  sed --in-place "/^end$/i \ \ $relation" "$file"
 }
 
 ################
-# validations
+# course
 
-add course 'validates :term, :number, :name, :instructor, presence: true'
+add course 'has_many :assignments, dependent: :destroy'
+add course 'has_many :teaching_assistants, through: :assignments'
+add course ''
+add course 'validates :year, :term, :number, :name, :instructor, :time_budget, presence: true'
 add course 'validates :year, numericality: { in: 2020..2100 }'
 add course 'validates :time_budget, numericality: { in: 0..1000000 }'
 
+################
+# teaching_assistant
+
+add teaching_assistant 'has_many :assignments, dependent: :nullify'
+add teaching_assistant 'has_many :courses, through: :assignments'
+add teaching_assistant ''
+add teaching_assistant 'validates :year, :number, :name, :grade, :labo, presence: true'
 add teaching_assistant 'validates :year, numericality: { in: 2020..2100 }'
 add teaching_assistant 'validates :number, format: { with: /\\A[0-9A-Z]+\\z/, message: "数字と英大文字のみが使えます" }'
-add teaching_assistant 'validates :name, :labo, presence: true'
 add teaching_assistant 'validates :grade, inclusion: { in: %w(M1 M2 D1 D2 D3), message: "学年 %{value} は無効です" }'
 
-add assignment 'validates :course, presence: true'
-
-add work_hour 'validates :dtend, comparison: { greater_than: :dtstart }'
-add work_hour 'validates :actual_working_minutes, numericality: { in: 1..600  }'
-add work_hour 'validates :assignment, presence: true'
-
 ################
-# associations
-
-add course 'has_many :teaching_assistants, through: :assignments'
-add course 'has_many :assignments, dependent: :destroy'
-
-add teaching_assistant 'has_many :courses, through: :assignments'
-add teaching_assistant 'has_many :assignments, dependent: :nullify'
+# association
 
 add assignment 'has_many :work_hours, dependent: :destroy'
+add assignment ''
+add assignment 'validates :course, presence: true'
+
+################
+# work_hour
+
+add work_hour ''
+add work_hour 'validates :assignment, presence: true'
+add work_hour 'validates :dtend, comparison: { greater_than: :dtstart }'
+add work_hour 'validates :actual_working_minutes, numericality: { in: 1..600  }'
 
 ################################################################
 # do migration
