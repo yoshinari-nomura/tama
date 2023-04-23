@@ -27,9 +27,17 @@ class TeachingAssistantsController < ApplicationController
       if @teaching_assistant.save
         format.html { redirect_to teaching_assistant_url(@teaching_assistant), notice: "Teaching assistant was successfully created." }
         format.json { render :show, status: :created, location: @teaching_assistant }
+
+        # pass notice to create.turbo_stream.erb
+        flash.now.notice = "Teaching assistant was successfully created."
+        format.turbo_stream {} # will be rendered by create.turbo_stream.erb
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @teaching_assistant.errors, status: :unprocessable_entity }
+
+        # In case error, we do not return turbo stream.
+        # HTML render edit will work.
+        # Validation will be shown inline, no need to use flash.
       end
     end
   end
@@ -40,9 +48,17 @@ class TeachingAssistantsController < ApplicationController
       if @teaching_assistant.update(teaching_assistant_params)
         format.html { redirect_to teaching_assistant_url(@teaching_assistant), notice: "Teaching assistant was successfully updated." }
         format.json { render :show, status: :ok, location: @teaching_assistant }
+
+        # pass notice to update.turbo_stream.erb
+        flash.now.notice = "Teaching assistant was successfully updated."
+        format.turbo_stream {} # will be rendered by update.turbo_stream.erb
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @teaching_assistant.errors, status: :unprocessable_entity }
+
+        # In case error, we do not return turbo stream.
+        # HTML render edit will work.
+        # Validation will be shown inline, no need to use flash.
       end
     end
   end
@@ -54,6 +70,10 @@ class TeachingAssistantsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to teaching_assistants_url, notice: "Teaching assistant was successfully destroyed." }
       format.json { head :no_content }
+
+      # pass notice to destroy.turbo_stream.erb
+      flash.now.notice = "Teaching assistant was successfully destroyed."
+      format.turbo_stream {} # will be rendered by destroy.turbo_stream.erb
     end
   end
 

@@ -1,9 +1,25 @@
-<%= bootstrap_form_with(model: teaching_assistant) do |form| %>
-  <%= form.number_field :year %>
-  <%= form.text_field :number %>
-  <%= form.text_field :name %>
-  <%= form.text_field :grade %>
-  <%= form.text_field :labo %>
-  <%= form.text_field :description %>
-  <%= form.submit %>
+<%= turbo_frame_tag teaching_assistant do %>
+  <%= bootstrap_form_with(model: teaching_assistant) do |form| %>
+    <div class="row py-2 border-top">
+      <% inline_options = {
+            skip_label: true,
+            label_as_placeholder: true,
+            wrapper: false,
+            control_class: "form-control form-control-sm"
+         }
+      %>
+      <div class="col-1 my-auto"><%= form.number_field :year, **inline_options %></div>
+      <div class="col-1 my-auto"><%= form.text_field :number, **inline_options %></div>
+      <div class="col-1 my-auto"><%= form.text_field :name, **inline_options %></div>
+      <div class="col-1 my-auto"><%= form.text_field :grade, **inline_options %></div>
+      <div class="col-1 my-auto"><%= form.text_field :labo, **inline_options %></div>
+      <div class="col-4 my-auto"><%= form.text_field :description, **inline_options %></div>
+      <div class="col-3">
+        <div class="d-flex justify-content-end">
+          <%= form.primary class: "btn btn-primary btn-sm me-2" %>
+          <%= link_to "キャンセル", teaching_assistant, class: "btn btn-sm btn-outline-secondary" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
 <% end %>
