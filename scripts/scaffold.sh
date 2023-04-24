@@ -62,10 +62,7 @@ sed --in-place '/belongs_to :teaching_assistant/s/$/, optional: true/' \
 
 # WorkHour
 #
-# Since WorkHour does not need view and controller, create model
-# instead of scaffold.
-#
-$rails g model \
+$rails g scaffold \
   WorkHour \
     dtstart:datetime \
     dtend:datetime \
