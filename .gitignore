@@ -115,3 +115,5 @@ yarn-debug.log*
 
 # Ignore local files
 /attic/
+dyn/
+/doc/ta-system.html
