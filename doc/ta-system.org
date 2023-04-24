@@ -1,7 +1,7 @@
 #+TITLE: ティーチングアシスタント(TA)時間管理システム
 #+AUTHOR: ソフトウェア開発法 担当教員
 #+EMAIL:
-#+DATE: 2023年4月21日
+#+DATE: 2023年4月24日
 #+OPTIONS: H:3 num:2 toc:2
 #+OPTIONS: ^:nil @:t \n:nil ::t |:t f:t TeX:t
 #+OPTIONS: skip:nil
@@ -12,7 +12,6 @@
 #+OPTIONS: timestamps:nil
 #+OPTIONS: d:nil
 #+OPTIONS: tags:t
-#+OPTIONS: title:nil
 #+TEXT:
 #+DESCRIPTION:
 #+KEYWORDS:
@@ -214,7 +213,7 @@
     |       24 |            2023 |                 2 |            098609 | 情報セキュリティ            | 山内                        |                               1400 |                    |
     |       25 |            2023 |                 1 |            098301 | 統計データ解析基礎          | 高橋                        |                               1400 |                    |
 *** table: teaching_assistants
-    *氏名は架空の物で置き換えられています*
+    *氏名は架空の物で置き換えられている*
     | No. (id) | 対象年度 (year) | 学生番号 (number) | 学年 (grade) | 氏名 (name) | 研究室(気付) (labo) | 備考 (description) |
     |----------+-----------------+-------------------+--------------+-------------+---------------------+--------------------|
     |        1 |            2023 | 43M21414          | M2           | 内山 勝善   | 門田研              |                    |
@@ -334,38 +333,102 @@
 
    # [[file:dyn/img/schema.svg]]
 
+** テーブルと OR マッパの関係
    上記 4つのテーブル courses, teaching_assistants, assignments,
-   work_hours について，ORマッパを想定した
-   Course, TeachingAssistant, Assignment, WorkHour
-   というクラス (モデル) を考えた場合，各モデルには，
-   以下のような関係がある．
+   work_hours について，ORマッパを想定したクラス
+   (モデル) を考えた場合，各モデルには，以下のような関係がある．
 
    + Course ::
      + has_many :assignments, dependent: :destroy
      + has_many :teaching_assistants, through: :assignments
+
      レコードが消滅した場合，関係する Assignment は消去されるべきだが，
      TeachingAssistant は，温存されなければならない．
 
    + TeachingAssistant ::
      + has_many :courses, through: :assignments
      + has_many :assignments, dependent: :nullify
-     レコードが消滅した場合，関係する Course に特に影響を与えてはならない．
-     Assignment も温存 (Course に結びついたままに) するが，
-     nullify することで，Assignment に TA が割り振られていない状況を許す．
+
+     レコードが消滅した場合，関係する Course に影響を与えてはならない．
+     Assignment も温存 (Course に結びついたままに) し，
+     teaching_assistant_id を nullify することで，Assignment に
+     TA が割り振られていない状況を許す．
 
    + Assignment ::
      + has_many :work_hours, dependent: :destroy
      + belongs_to :course
      + belongs_to :teaching_assistant, optional: true
+
      Course と TeachingAssistant の中間モデル的な存在だが
-     WorkHours を収容している点で，完全な中間モデルというわけではない．
+     WorkHour を収容している点で，完全な中間モデルというわけではない．
 
-     これは，WorkHours を直接 TeachingAssistant に関連付けずに (つまり WorkHours と Assignment を 1つのモデルで構成せずに)
-     Assignment に関連付けることで，TA未選出ながら時間枠は設定済の状況を表現するためである．
-     TA未選出の状況を表現するために teaching_assistant_id カラムに null を許す (opional) としなければならない．
+     これは，WorkHour を直接 TeachingAssistant に関連付けずに (つまり WorkHour と Assignment を 1つのモデルで構成せずに)
+     Assignment を間に挟むことで，TA未選出ながら勤務シフトは入力済の状況を表現するためである．
 
-     レコードが消滅した場合，関係する全ての WorkHour は消去されるべきであるが，その他には影響を与えてはならない．
+     そのため，teaching_assistant_id は null を許す (opional) としなければならない．
+
+     レコードが消滅した場合，関係する全ての WorkHour は消去されるべきであるが，他には影響を与えてはならない．
 
    + WorkHours ::
      + belongs_to :assignment
+
      レコードが消滅した場合，その他には影響を与えてはならない．
+
+
+** 中間テーブルのサンプルデータ
+*** table: assignments
+    「システムプログラミング1」 (id: 6) に 3名の TA (id: 1,2,3) を割当てた様子
+    | id | course_id | teaching_assistant_id | description |
+    |----+-----------+-----------------------+-------------|
+    |  1 |         6 |                     1 |             |
+    |  2 |         6 |                     2 |             |
+    |  3 |         6 |                     3 |             |
+
+*** table: work_hours
+    assignment (id: 1,2,3) にそれぞれ 7回づつの講義を割当てた様子，勤務時間は全て同一にしているが，
+    もちろん違うこともありえる．
+    | id | dtstart          | dtend            | actual_working_minutes | assignment_id |
+    |----+------------------+------------------+------------------------+---------------|
+    |  1 | 2023-10-02 13:25 | 2023-10-02 17:20 |                    200 |             1 |
+    |  2 | 2023-10-16 13:25 | 2023-10-16 17:20 |                    200 |             1 |
+    |  3 | 2023-10-23 13:25 | 2023-10-23 17:20 |                    200 |             1 |
+    |  4 | 2023-10-30 13:25 | 2023-10-30 17:20 |                    200 |             1 |
+    |  5 | 2023-11-06 13:25 | 2023-11-06 17:20 |                    200 |             1 |
+    |  6 | 2023-11-13 13:25 | 2023-11-13 17:20 |                    200 |             1 |
+    |  7 | 2023-11-20 13:25 | 2023-11-20 17:20 |                    200 |             1 |
+    |  8 | 2023-10-02 13:25 | 2023-10-02 17:20 |                    200 |             2 |
+    |  9 | 2023-10-16 13:25 | 2023-10-16 17:20 |                    200 |             2 |
+    | 10 | 2023-10-23 13:25 | 2023-10-23 17:20 |                    200 |             2 |
+    | 11 | 2023-10-30 13:25 | 2023-10-30 17:20 |                    200 |             2 |
+    | 12 | 2023-11-06 13:25 | 2023-11-06 17:20 |                    200 |             2 |
+    | 13 | 2023-11-13 13:25 | 2023-11-13 17:20 |                    200 |             2 |
+    | 14 | 2023-11-20 13:25 | 2023-11-20 17:20 |                    200 |             2 |
+    | 15 | 2023-10-02 13:25 | 2023-10-02 17:20 |                    200 |             3 |
+    | 16 | 2023-10-16 13:25 | 2023-10-16 17:20 |                    200 |             3 |
+    | 17 | 2023-10-23 13:25 | 2023-10-23 17:20 |                    200 |             3 |
+    | 18 | 2023-10-30 13:25 | 2023-10-30 17:20 |                    200 |             3 |
+    | 19 | 2023-11-06 13:25 | 2023-11-06 17:20 |                    200 |             3 |
+    | 20 | 2023-11-13 13:25 | 2023-11-13 17:20 |                    200 |             3 |
+    | 21 | 2023-11-20 13:25 | 2023-11-20 17:20 |                    200 |             3 |
+
+
+** レコードの値と制約に関する議論
+   以下は，ER図から分かることであるが，注釈しておく．
+
+   + ほとんどの外部キーは 非NULL 制約を持つが，
+     teaching_assistant_id は NULL を許す．理由は，前述の通り．
+
+   + ほとんどの「数」に見えるカラムは，実際には数値ではない．
+     数値として取り扱うべきは，おそらく「対象年度」，
+     「実働時間(分)」，「TA割当可能総時間(分)」のみである．
+
+   以下は，システムの要件に応じて検討しなければならない．
+
+   + ある course を削除する際，関係する assignment がある場合，
+     いずれの挙動が適切か考えるべきである
+     + 削除を許さない
+     + assignment と共に削除する (work_hour も消える)
+
+   上記は，以下の関係も同様である
+   + teaching_assistant を削除する際の assignment
+   + assignment を削除する場合の work_hours
