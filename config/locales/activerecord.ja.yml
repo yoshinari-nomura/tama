@@ -1,8 +1,39 @@
 ja:
   activerecord:
     models:
-      student: 学生
+      course: 授業科目
+      teaching_assistant: TA
+      asssignment: TA割当
+      work_hour: 勤務時間帯
     attributes:
-      student:
-        name: 氏名
+      course:
+        id: No.
+        year: 対象年度
+        term: 学期(気付)
+        number: 講義番号
+        name: 授業科目名
+        instructor: 担当教員(気付)
+        time_budget: TA割当可能総時間(分)
+        description: 備考
+      teaching_assistant:
+        id: No.
+        year: 対象年度
         number: 学生番号
+        grade: 学年
+        name: 氏名
+        labo: 研究室(気付)
+        description: 備考
+      asssignment:
+        id: No.
+        course: 授業科目
+        course_id: 授業科目
+        teaching_assistant: TA
+        teaching_assistant_id: TA
+        description: 備考
+      work_hour:
+        id: No.
+        dtstart: 開始時刻
+        dtend: 終了時刻
+        actual_working_minutes: 実働(分)
+        assignment: 割当先
+        assignment_id: 割当先
