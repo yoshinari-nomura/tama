@@ -7,6 +7,7 @@ class Assignment < ApplicationRecord
   validates :teaching_assistant, uniqueness: { scope: :course, message: "科目に同一のTAが既にいます"}
 
   def teaching_assistant_name
-    self.teaching_assistant || "unspecified-#{self.id}"
+    return "TA-#{self.id}" unless self.teaching_assistant
+    self.teaching_assistant.name
   end
 end
