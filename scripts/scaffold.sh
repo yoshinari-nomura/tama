@@ -85,6 +85,7 @@ function add() {
 
 add course 'has_many :assignments, dependent: :destroy'
 add course 'has_many :teaching_assistants, through: :assignments'
+ass course 'has_many :work_hours, through: :assignments'
 add course ''
 add course 'validates :year, :term, :number, :name, :instructor, :time_budget, presence: true'
 add course 'validates :year, numericality: { in: 2020..2100 }'
@@ -98,22 +99,26 @@ add teaching_assistant 'has_many :courses, through: :assignments'
 add teaching_assistant ''
 add teaching_assistant 'validates :year, :number, :name, :grade, :labo, presence: true'
 add teaching_assistant 'validates :year, numericality: { in: 2020..2100 }'
-add teaching_assistant 'validates :number, format: { with: /\\A[0-9A-Z]+\\z/, message: "数字と英大文字のみが使えます" }'
-add teaching_assistant 'validates :grade, inclusion: { in: %w(M1 M2 D1 D2 D3), message: "学年 %{value} は無効です" }'
+add teaching_assistant 'validates :number, format: { with: /\A[0-9A-Z]+\z/, message: "には数字と英大文字のみが使えます" }'
+add teaching_assistant 'validates :grade, inclusion: { in: %w(M1 M2 D1 D2 D3), message: "の %{value} は無効です" }'
 
 ################
-# association
+# assignment
 
 add assignment 'has_many :work_hours, dependent: :destroy'
 add assignment ''
 add assignment 'validates :course, presence: true'
+add assignment 'validates :teaching_assistant, uniqueness: { scope: :course, message: "科目に同一のTAが既にいます"}'
 
 ################
 # work_hour
 
+add work_hour 'has_one :course, through: :assignment'
 add work_hour ''
-add work_hour 'validates :assignment, presence: true'
-add work_hour 'validates :dtend, comparison: { greater_than: :dtstart }'
+
+add work_hour 'validates :dtstart, presence: true'
+add work_hour 'validates :dtend, :actual_working_minutes, presence: { message: '' }'
+add work_hour 'validates :dtend, comparison: { greater_than: :dtstart, message: "は開始時刻後にして下さい" }'
 add work_hour 'validates :actual_working_minutes, numericality: { in: 1..600  }'
 
 ################################################################
