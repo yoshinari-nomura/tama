@@ -1,22 +1,24 @@
-<div id="<%= dom_id work_hour %>">
-  <p>
-    <strong>Dtstart:</strong>
-    <%= work_hour.dtstart %>
-  </p>
+<%= turbo_frame_tag work_hour do %>
+  <% wday = %w(日 月 火 水 木 金 土)[work_hour.date.wday] %>
+  <div class="row py-1">
+    <div class="col-3 my-auto font-monospace">
+      <%= work_hour.date.strftime("%Y-%m-%d (#{wday})") %>&nbsp;
+      <%= work_hour.dtstart.strftime("%H:%M") %>-<%= work_hour.dtend.strftime("%H:%M") %>
+      (内 <%= work_hour.actual_working_minutes %>分)
+    </div>
 
-  <p>
-    <strong>Dtend:</strong>
-    <%= work_hour.dtend %>
-  </p>
+    <div class="col-3 my-auto">
+      <%= work_hour.assignment.teaching_assistant_name %>
+    </div>
 
-  <p>
-    <strong>Actual working minutes:</strong>
-    <%= work_hour.actual_working_minutes %>
-  </p>
-
-  <p>
-    <strong>Assignment:</strong>
-    <%= work_hour.assignment_id %>
-  </p>
-
-</div>
+    <div class="col d-flex justify-content-end">
+      <%= link_to "編集", edit_work_hour_path(work_hour), class: "btn btn-sm btn-outline-primary me-2" %>
+      <%#= link_to "表示", work_hour, class: "btn btn-sm btn-outline-primary me-2" %>
+      <%= button_to "削除", work_hour,
+            method: :delete,
+            class: "btn btn-sm btn-outline-danger",
+            data: { turbo_confirm: "Do you really destroy #{work_hour.assignment.teaching_assistant_name}?" }
+      %>
+    </div>
+  </div>
+<% end %>

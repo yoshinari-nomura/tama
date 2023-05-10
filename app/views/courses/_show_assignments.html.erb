@@ -1,0 +1,20 @@
+<div id="assignments">
+  <% assignments = course.assignments %>
+  <% assignments.each do |assignment| %>
+    <%= turbo_frame_tag assignment do %>
+      <div class="row py-1 border-top">
+        <div class="col-2 my-auto"><%= assignment.teaching_assistant_name %></div>
+        <div class="col-3 my-auto"><%= assignment.work_hours.count %>回 / 合計 <%= assignment.work_hours.sum(:actual_working_minutes) %>分</div>
+        <div class="col   my-auto"><%= assignment.description %></div>
+        <div class="col d-flex justify-content-end">
+          <%= link_to "TA割当変更", edit_assignment_path(assignment), class: "btn btn-sm btn-outline-primary me-2" %>
+          <%= button_to "削除", assignment,
+                  method: :delete,
+                  class: "btn btn-sm btn-outline-danger",
+                  data: { turbo_confirm: "Do you really fire #{assignment.teaching_assistant_name }?" }
+          %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>

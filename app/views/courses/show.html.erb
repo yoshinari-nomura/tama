@@ -1,7 +1,63 @@
-<p style="color: green"><%= notice %></p>
+<div class="row" style="width: 100%; padding: 10px; background: white">
+  <h2>
+    <%= @course.year %>年度
+    <%= @course.term %>学期
+    <%= @course.name %> (<%= @course.instructor %>) [<%= @course.number %>]
+  </h2>
 
-<%= render @course %>
+  <div class="row py-2">
+    <div class="col my-auto">
+      <%= @course.description %>
+    </div>
+  </div>
+</div>
 
-<div>
-  <%= link_to "Back to courses", courses_path %>
+<div class="card mt-3">
+  <div class="card-header">
+    <%= icon_with_text("table", "TA 割当一覧") %> &nbsp;&nbsp;
+    (<%= format("%5d / %5d 分", @course.work_hours.sum(:actual_working_minutes), @course.time_budget) %>)
+  </div>
+  <div class="card-body mx-3">
+    <div class="row py-2">
+      <div class="col-2 my-auto">氏名</div>
+      <div class="col-3 my-auto">割当状況</div>
+      <div class="col d-flex justify-content-end">
+        <%= link_to icon_with_text("plus-circle", "TAを追加"),
+              new_assignment_path(course_id: @course),
+              class: "btn btn-sm btn-outline-primary",
+              data: { turbo_frame: "new_assignment" }
+        %>
+      </div>
+    </div>
+
+    <div class="row">
+      <%= turbo_frame_tag "new_assignment" %>
+    </div>
+    <%= render partial: "show_assignments", locals: { course: @course } %>
+  </div>
+</div>
+
+<div class="card mt-3">
+  <div class="card-header">
+    <%= icon_with_text("table", "シフト一覧") %>
+  </div>
+  <div class="card-body mx-3">
+
+    <div class="row py-1">
+      <div class="col-3 my-auto">日時</div>
+      <div class="col-3 my-auto">割当状況</div>
+      <div class="col d-flex justify-content-end">
+        <%= link_to icon_with_text("plus-circle", "シフトを追加"),
+              new_course_work_hour_path(@course),
+              class: "btn btn-sm btn-outline-primary",
+              data: { turbo_frame: "new_work_hour" }
+        %>
+      </div>
+    </div>
+
+    <div class="row">
+      <%= turbo_frame_tag "new_work_hour" %>
+    </div>
+    <%= render partial: "show_work_hours", locals: { course: @course } %>
+  </div>
 </div>

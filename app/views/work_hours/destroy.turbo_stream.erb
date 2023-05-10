@@ -1,0 +1,8 @@
+<% if @work_hours %>
+  <% @work_hours.each do |w| %>
+    <%= turbo_stream.remove w %>
+  <% end %>
+<% else %>
+   <%= turbo_stream.remove @work_hour %>
+<% end %>
+<%= turbo_stream_flash %>

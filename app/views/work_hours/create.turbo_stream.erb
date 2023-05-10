@@ -1,0 +1,7 @@
+<%#= turbo_stream.prepend "work_hours", @work_hour %>
+<%= turbo_stream.update "new_work_hour", "" %>
+<%= turbo_stream_flash %>
+<%= turbo_stream.replace "work_hours" do %>
+  <%= render partial: "courses/show_work_hours",
+             locals: { course: @course } %>
+<% end %>

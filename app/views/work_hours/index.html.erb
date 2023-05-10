@@ -1,14 +1,24 @@
-<p style="color: green"><%= notice %></p>
-
 <h1>Work hours</h1>
 
-<div id="work_hours">
-  <% @work_hours.each do |work_hour| %>
-    <%= render work_hour %>
-    <p>
-      <%= link_to "Show this work hour", work_hour %>
-    </p>
-  <% end %>
+<div class="card shadow mt-3">
+  <div class="card-header">
+    <%= icon_with_text("table", "一覧") %>
+  </div>
+  <div class="card-body mx-3">
+    <div class="row py-1">
+      <div class="col-3 my-auto">日時</div>
+      <div class="col-3 my-auto">割当状況</div>
+      <div class="col d-flex justify-content-end">
+        <%#= link_to icon_with_text("plus-circle", "登録"),
+            new_work_hour_path,
+            class: "btn btn-outline-primary",
+            data: { turbo_frame: "new_work_hour" }
+        %>
+      </div>
+    </div>
+    <%= turbo_frame_tag "new_work_hour" %>
+    <div id="work_hours">
+      <%= render @work_hours %>
+    </div>
+  </div>
 </div>
-
-<%= link_to "New work hour", new_work_hour_path %>

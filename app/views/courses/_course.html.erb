@@ -1,15 +1,31 @@
+<% sum = course.work_hours.sum(:actual_working_minutes); budget = course.time_budget %>
+<% notice = if sum > budget then 'text-danger' else '' end %>
+
 <div class="row py-2 border-top">
-  <div class="col-1 my-auto"><%= course.year %></div>
-  <div class="col-1 my-auto"><%= course.term %></div>
-  <div class="col-1 my-auto"><%= course.number %></div>
-  <div class="col-3 my-auto"><%= course.name %></div>
+
+  <div class="col-2 my-auto">
+    <div class="row py-2">
+      <div class="col-4 my-auto"><%= course.year %></div>
+      <div class="col-4 my-auto"><%= course.term %></div>
+      <div class="col-4 my-auto"><%= course.number %></div>
+    </div>
+  </div>
+
+  <div class="col-2 my-auto"><%= course.name %></div>
   <div class="col-1 my-auto"><%= course.instructor %></div>
-  <div class="col-1 my-auto"><%= course.time_budget %></div>
-  <div class="col-2 my-auto"><%= course.description %></div>
+
+  <div class="col-2 my-auto">
+    <div class="row py-2">
+      <div class="col-6 my-auto <%= "#{notice}" %>"><%= sum %></div>
+      <div class="col-6 my-auto <%= "#{notice}" %>"><%= budget %></div>
+    </div>
+  </div>
+
+  <div class="col-3 my-auto"><%= course.description %></div>
   <div class="col-2">
     <div class="d-flex justify-content-end">
       <%= link_to "編集", edit_course_path(course), class: "btn btn-sm btn-outline-primary me-2" %>
-      <%= link_to "表示", course, class: "btn btn-sm btn-outline-primary me-2" %>
+      <%= link_to "TA割当", course, class: "btn btn-sm btn-outline-primary me-2" %>
       <%= button_to "削除", course,
             method: :delete,
             class: "btn btn-sm btn-outline-danger",

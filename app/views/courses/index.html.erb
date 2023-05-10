@@ -6,13 +6,26 @@
   </div>
   <div class="card-body mx-3">
     <div class="row py-2">
-      <div class="col-1 my-auto">対象年度</div>
-      <div class="col-1 my-auto">学期(気付)</div>
-      <div class="col-1 my-auto">講義番号</div>
-      <div class="col-3 my-auto">授業科目名</div>
-      <div class="col-1 my-auto">担当教員(気付)</div>
-      <div class="col-1 my-auto">配分 (分)</div>
-      <div class="col-2 my-auto">備考</div>
+
+      <div class="col-2 my-auto">
+        <div class="row py-2">
+          <div class="col-4 my-auto">対象年度</div>
+          <div class="col-4 my-auto">学期</div>
+          <div class="col-4 my-auto">講義番号</div>
+        </div>
+      </div>
+
+      <div class="col-2 my-auto">授業科目名</div>
+      <div class="col-1 my-auto">担当教員</div>
+
+      <div class="col-2 my-auto">
+        <div class="row py-2">
+          <div class="col-6 my-auto">割当済</div>
+          <div class="col-6 my-auto">配分 (分)</div>
+        </div>
+      </div>
+
+      <div class="col-3 my-auto">備考</div>
       <div class="col-2 d-flex justify-content-end">
         <%= link_to icon_with_text("plus-circle", "登録"), new_course_path, class: "btn btn-outline-primary" %>
       </div>

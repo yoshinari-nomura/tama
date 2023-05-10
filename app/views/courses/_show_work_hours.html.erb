@@ -1,0 +1,44 @@
+<div id="work_hours">
+  <% course.work_hours_calendar.each do |date, time_slot| %>
+    <% colors = %w(pink white white white white white cyan) %>
+    <% bg = colors[date.wday] %>
+    <% wday = %w(日 月 火 水 木 金 土)[date.wday] %>
+
+    <% time_slot.each do |ts, ws| %>
+      <div class="row py-2 border-top" style="background: <%= bg %>">
+
+        <div class="col-3 my-auto font-monospace">
+          <%= date.strftime("%Y-%m-%d (#{wday})") %>&nbsp;&nbsp;<%= ts[0].strftime("%H:%M") %>-<%= ts[1].strftime("%H:%M") %> (内<%= ts[2] %>分)
+        </div>
+
+        <div class="col-6 my-auto">
+          <% first_work_hour = nil %>
+          <% ws.each do |w| %>
+            <% first_work_hour ||= w %>
+            <%= turbo_frame_tag w do %>
+              <div class="my-auto py-0 px-2 mx-1 border border-primary rounded-3" style="display: inline-block; width: auto;">
+                <%= w.assignment.teaching_assistant_name %>
+                <span style="display: inline-block; width: auto;" data-toggle="tooltip" title="削除します" data-placement="bottom">
+                  <%= button_to icon("x-circle"), w, method: :delete, class: "btn btn-sm mx-0 px-0" %>
+                </span>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+
+        <div class="col d-flex justify-content-end">
+          <%= button_to "次週にコピー",
+                course_work_hours_path(course, with_colleagues: true, template: first_work_hour),
+                method: :post,
+                class: "btn btn-sm btn-outline-primary me-2"
+          %>
+          <%= button_to "全員削除", work_hour_path(first_work_hour, with_colleagues: true),
+                  method: :delete,
+                  class: "btn btn-sm btn-outline-danger",
+                  data: { turbo_confirm: "Do you really remove all TAs in the same shift?" }
+          %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>

@@ -1,37 +1,66 @@
-<%= form_with(model: work_hour) do |form| %>
-  <% if work_hour.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(work_hour.errors.count, "error") %> prohibited this work_hour from being saved:</h2>
+<%= turbo_frame_tag work_hour do %>
+  <%= bootstrap_form_with(model: [@course, work_hour], label_errors: true) do |form| %>
+    <div class="row py-2 border-top" style="height: 160px;">
 
-      <ul>
-        <% work_hour.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+      <div class="col-2 mt-0">
+        <%= form.collection_select :assignment_id, @course.assignments, :id, :teaching_assistant_name,
+              {selected: (@assignments||[]).map(&:id)}, multiple: true, size: 3 %>
+      </div>
+
+      <div class="col-auto mt-0">
+        <%= date_select_in_school_year :work_hour, work_hour, @course.year %>
+      </div>
+
+      <div class="col-2 mt-0">
+        <%= form.number_field :actual_working_minutes %>
+      </div>
+
+      <div class="col mt-0">
+        <div class="row">
+          <label>&nbsp;</label>
+          <div class="d-flex justify-content-end">
+            <%= form.primary class: "btn btn-primary btn-sm me-2" %>
+            <%= link_to "キャンセル", work_hour, class: "btn btn-sm btn-outline-secondary" %>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <script type="text/javascript">
+      // Since date part of dtstart and dtend have to be same,
+      // copy date-part of dtstart on change.
+      //
+      // date_select_in_school_year helper's
+      // dtstart_1i element is in the form of YYYY-MM
+      // (actually, dtstart_2i is a hidden form).
+      // We need to extract and feed MM part for the sake of dtstart_2i.
+      //
+      // Note that dtstart_1i is safely accepted by rails
+      // even it has -MM part.
+      //
+      function copy_date_from_dtstart_to_dtend(object_name) {
+        const ym_id = object_name + '_dtstart_1i';
+        const dd_id = object_name + '_dtstart_3i';
+
+        const yy = document.getElementById(ym_id).value.split('-')[0];
+        const mm = document.getElementById(ym_id).value.split('-')[1];
+        const dd = document.getElementById(dd_id).value
+
+        document.getElementById(object_name + '_dtstart_2i').value = mm;
+        document.getElementById(object_name + '_dtend_1i').value = yy;
+        document.getElementById(object_name + '_dtend_2i').value = mm;
+        document.getElementById(object_name + '_dtend_3i').value = dd;
+        console.log(`Date: ${yy}-${mm}-${dd}`);
+      }
+
+      var e1 = document.getElementById('work_hour_dtstart_1i')
+      var e2 = document.getElementById('work_hour_dtstart_3i')
+
+      e1.addEventListener("input", () => { copy_date_from_dtstart_to_dtend('work_hour'); }, false);
+      e2.addEventListener("input", () => { copy_date_from_dtstart_to_dtend('work_hour'); }, false);
+
+      copy_date_from_dtstart_to_dtend('work_hour');
+    </script>
+
   <% end %>
-
-  <div>
-    <%= form.label :dtstart, style: "display: block" %>
-    <%= form.datetime_field :dtstart %>
-  </div>
-
-  <div>
-    <%= form.label :dtend, style: "display: block" %>
-    <%= form.datetime_field :dtend %>
-  </div>
-
-  <div>
-    <%= form.label :actual_working_minutes, style: "display: block" %>
-    <%= form.number_field :actual_working_minutes %>
-  </div>
-
-  <div>
-    <%= form.label :assignment_id, style: "display: block" %>
-    <%= form.text_field :assignment_id %>
-  </div>
-
-  <div>
-    <%= form.submit %>
-  </div>
 <% end %>
