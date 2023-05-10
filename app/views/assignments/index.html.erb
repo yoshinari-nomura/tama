@@ -10,9 +10,14 @@
       <div class="col-3 my-auto">TA</div>
       <div class="col-4 my-auto">備考</div>
       <div class="col-2 d-flex justify-content-end">
-        <%= link_to icon_with_text("plus-circle", "登録"), new_assignment_path, class: "btn btn-outline-primary" %>
+        <%= link_to icon_with_text("plus-circle", "TAを追加"),
+              new_assignment_path(course_id: @course),
+              class: "btn btn-outline-primary",
+              data: { turbo_frame: "new_assignment" }
+        %>
       </div>
     </div>
+    <%= turbo_frame_tag "new_assignment" %>
     <%= render @assignments %>
   </div>
 </div>

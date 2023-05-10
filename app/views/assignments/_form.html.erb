@@ -1,6 +1,41 @@
-<%= bootstrap_form_with(model: assignment) do |form| %>
-  <%= form.collection_select :course_id, @courses, :id, :name, error_key: :course, include_blank: "Select a value" %>
-  <%= form.text_field :teaching_assistant_id %>
-  <%= form.text_field :description %>
-  <%= form.submit %>
+<%
+  inline_options = {
+    skip_label: true,
+    layout: :horizontal,
+    label_as_placeholder: true,
+    wrapper: false,
+    control_class: "form-control form-control-sm"
+  }
+%>
+<%= turbo_frame_tag assignment do %>
+  <%= bootstrap_form_with(model: assignment) do |form| %>
+    <div class="row py-2 border-top">
+
+      <div class="col-2 my-auto">
+        <% if assignment.course %>
+          <%= assignment.course.name %>
+          <%= form.hidden_field :course_id %>
+        <% else %>
+          <%= form.collection_select :course_id, @courses, :id, :name, **inline_options %>
+        <% end %>
+      </div>
+
+      <div class="col-2 my-auto">
+        <%= form.collection_select :teaching_assistant_id, @teaching_assistants, :id, :name, include_blank: "-- TA を選定 --", **inline_options %>
+      </div>
+
+
+
+      <div class="col-3 my-auto">
+        <%= form.text_field :description, **inline_options %>
+      </div>
+
+      <div class="col-3">
+        <div class="d-flex justify-content-end">
+          <%= form.primary class: "btn btn-primary btn-sm me-2" %>
+          <%= link_to "Cancel", assignment, class: "btn btn-sm btn-outline-secondary" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
 <% end %>
