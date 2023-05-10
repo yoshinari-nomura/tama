@@ -19,4 +19,24 @@ module ApplicationHelper
   def turbo_stream_flash
     turbo_stream.update "flash", partial: "flash"
   end
+
+  def validate_as_css_class_name(object, method)
+    if object.errors[method].first
+      'is-invalid'
+    else
+      ''
+    end
+  end
+
+  def label_tag_with_validation(object, object_name, method)
+    label_txt = object.class.human_attribute_name(method)
+    label_cls = %w[form-label required]
+
+    if (error_msg = object.errors[method].first)
+      label_txt << error_msg
+      label_cls << 'text-danger'
+    end
+
+    tag.label(label_txt, class: label_cls, for: "#{object_name}_#{method}")
+  end
 end
