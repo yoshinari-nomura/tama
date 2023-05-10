@@ -36,7 +36,7 @@ class TeachingAssistantsController < ApplicationController
         format.json { render json: @teaching_assistant.errors, status: :unprocessable_entity }
 
         # In case error, we do not return turbo stream.
-        # HTML render edit will work.
+        # HTML render new (_form) will work.
         # Validation will be shown inline, no need to use flash.
       end
     end
@@ -57,7 +57,7 @@ class TeachingAssistantsController < ApplicationController
         format.json { render json: @teaching_assistant.errors, status: :unprocessable_entity }
 
         # In case error, we do not return turbo stream.
-        # HTML render edit will work.
+        # HTML render edit (_form) will work.
         # Validation will be shown inline, no need to use flash.
       end
     end
