@@ -21,3 +21,20 @@
   入力するのみで，TAの手を介さずに整合性の確認と帳票出力を可能とする．
 
   詳細は [[doc/ta-system.org]] 参照
+
+* サンプルを試してみるには
+
+  ruby, node (yarn) が必要です．
+
+  .ruby-version, .node-version 参照のこと．
+
+  #+begin_src shell-script
+    git clone git@github.com:yoshinari-nomura/tama.git
+    cd tama
+    bundle config set path vendor/bundle
+    bundle install
+    yarn
+    bin/rails db:migrate
+    bin/rails runner scripts/import-model.rb doc/ta-system.org
+    bin/dev
+  #+end_src
